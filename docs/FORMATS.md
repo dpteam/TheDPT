@@ -418,7 +418,7 @@
 | [`DPT.gpx`](dpt/DPT.gpx) | GPX | путевая точка | 137 Б |
 | [`DPT.kml`](dpt/DPT.kml) | KML | метка для Google Earth | 189 Б |
 | [`DPT.torrent`](dpt/DPT.torrent) | BitTorrent | настоящий bencode с SHA-1 куска | 133 Б |
-| [`DPT.pem`](dpt/DPT.pem) | PEM | ключ RSA-2048, сгенерирован здесь же | 1.7 КиБ |
+| [`DPT.pem`](dpt/DPT.pem) | PEM | учебный ключ RSA-2048, зафиксирован в `tools/gen/key.mjs` ради воспроизводимости | 1.7 КиБ |
 | [`DPT.pub`](dpt/DPT.pub) | PEM (public) | открытая половина ключа | 451 Б |
 | [`DPT.sig`](dpt/DPT.sig) | Signature | подпись слова `DPT` этим ключом | 256 Б |
 

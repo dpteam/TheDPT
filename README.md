@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-7c5cff.svg)](LICENSE)
 [![Formats](https://img.shields.io/badge/%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82%D0%BE%D0%B2-371-6ee7ff.svg)](#каталог)
 [![Зависимости](https://img.shields.io/badge/%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D0%BE%D1%81%D1%82%D0%B8-0-a78bfa.svg)](package.json)
-[![ffmpeg](https://img.shields.io/badge/ffmpeg-1-ff6b9d.svg)](#как-это-сделано)
+[![ffmpeg](https://img.shields.io/badge/ffmpeg-%D1%82%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE%20%D0%B4%D0%BB%D1%8F%20%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE-ff6b9d.svg)](#как-это-сделано)
 
 </div>
 
@@ -484,10 +484,9 @@ ffplay -autoexit dpt/DPT.wav   # -.. .--. -   (морзянка)
 | [`DPT.gpx`](dpt/DPT.gpx) | GPX | путевая точка |
 | [`DPT.kml`](dpt/DPT.kml) | KML | метка для Google Earth |
 | [`DPT.torrent`](dpt/DPT.torrent) | BitTorrent | настоящий bencode с SHA-1 куска |
-| [`DPT.pem`](dpt/DPT.pem) | PEM | ключ RSA-2048, сгенерирован здесь же |
+| [`DPT.pem`](dpt/DPT.pem) | PEM | учебный ключ RSA-2048, зафиксирован в `tools/gen/key.mjs` ради воспроизводимости |
 | [`DPT.pub`](dpt/DPT.pub) | PEM (public) | открытая половина ключа |
 | [`DPT.sig`](dpt/DPT.sig) | Signature | подпись слова `DPT` этим ключом |
-
 
 ## Как это сделано
 

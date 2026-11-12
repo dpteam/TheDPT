@@ -98,7 +98,7 @@ export const BINARY_META = {
   'dpt/DPT.gpx': { cat: 'extra', name: 'GPX', note: 'путевая точка' },
   'dpt/DPT.kml': { cat: 'extra', name: 'KML', note: 'метка для Google Earth' },
   'dpt/DPT.torrent': { cat: 'extra', name: 'BitTorrent', note: 'настоящий bencode с SHA-1 куска' },
-  'dpt/DPT.pem': { cat: 'extra', name: 'PEM', note: 'ключ RSA-2048, сгенерирован здесь же' },
+  'dpt/DPT.pem': { cat: 'extra', name: 'PEM', note: 'учебный ключ RSA-2048, зафиксирован в `tools/gen/key.mjs` ради воспроизводимости' },
   'dpt/DPT.pub': { cat: 'extra', name: 'PEM (public)', note: 'открытая половина ключа' },
   'dpt/DPT.sig': { cat: 'extra', name: 'Signature', note: 'подпись слова `DPT` этим ключом' },
 };
