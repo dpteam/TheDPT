@@ -1,0 +1,2 @@
+; TheDPT
+^!d::MsgBox, DPT

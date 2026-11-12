@@ -1,0 +1,5 @@
+services:
+  dpt:
+    build: .
+    image: thedpt:1.0.0
+    command: ["node", "dpt/DPT.js"]

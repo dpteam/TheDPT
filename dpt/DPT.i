@@ -1,0 +1,6 @@
+	PLEASE DO ,1 <- #3
+	DO ,1 SUB #1 <- #68
+	DO ,1 SUB #2 <- #80
+	DO ,1 SUB #3 <- #84
+	PLEASE READ OUT ,1
+	PLEASE GIVE UP

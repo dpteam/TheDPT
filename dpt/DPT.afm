@@ -1,0 +1,22 @@
+StartFontMetrics 4.1
+Comment TheDPT — DartPower Team
+FontName DPT-Regular
+FullName DPT
+FamilyName DPT
+Weight Medium
+ItalicAngle 0
+IsFixedPitch true
+FontBBox 0 -128 960 896
+UnderlinePosition -100
+UnderlineThickness 50
+Version 1.0
+EncodingScheme FontSpecific
+CapHeight 896
+Ascender 896
+Descender -128
+StartCharMetrics 3
+C 68 ; WX 960 ; N D ; B 64 0 832 896 ;
+C 80 ; WX 960 ; N P ; B 64 0 832 896 ;
+C 84 ; WX 960 ; N T ; B 64 0 832 896 ;
+EndCharMetrics
+EndFontMetrics

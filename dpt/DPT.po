@@ -1,0 +1,2 @@
+msgid "DPT"
+msgstr "DPT"

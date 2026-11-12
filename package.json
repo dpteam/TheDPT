@@ -1,0 +1,17 @@
+{
+  "name": "thedpt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DPT — DartPower Team. Одно слово на всех языках, форматах и кодеках.",
+  "type": "module",
+  "scripts": {
+    "icon": "node tools/icon.mjs",
+    "gen": "node tools/gen/index.mjs",
+    "verify": "node tools/verify.mjs",
+    "build": "npm run icon && npm run gen && npm run verify"
+  },
+  "keywords": ["dpt", "dartpower", "polyglot", "esolang", "formats"],
+  "author": "DartPower Team",
+  "license": "MIT",
+  "engines": { "node": ">=20" }
+}

@@ -1,0 +1,6 @@
+query {
+  dpt {
+    name
+    team
+  }
+}

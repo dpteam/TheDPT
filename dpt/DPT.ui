@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DPT</class>
+ <widget class="QWidget" name="DPT">
+  <property name="windowTitle"><string>TheDPT</string></property>
+  <widget class="QLabel" name="label"><property name="text"><string>DPT</string></property></widget>
+ </widget>
+</ui>

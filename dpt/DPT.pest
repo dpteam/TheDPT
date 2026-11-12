@@ -1,0 +1,2 @@
+dpt = { "DPT" }
+WHITESPACE = _{ " " }

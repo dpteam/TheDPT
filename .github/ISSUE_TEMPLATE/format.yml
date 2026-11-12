@@ -1,0 +1,26 @@
+name: Новый формат
+description: Предложить формат, в котором ещё нет DPT
+title: "format: DPT."
+labels: [format]
+body:
+  - type: input
+    id: ext
+    attributes:
+      label: Расширение
+      placeholder: zig
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Почему это нужно
+      placeholder: Потому что без Zig команда неполная
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Проверки
+      options:
+        - label: Я проверил, что такого формата ещё нет в dpt/
+          required: true

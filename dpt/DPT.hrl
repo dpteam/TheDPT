@@ -1,0 +1,2 @@
+-define(DPT, "DartPower Team").
+-define(HELLO, io:format("DPT~n")).

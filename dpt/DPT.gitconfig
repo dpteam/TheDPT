@@ -1,0 +1,5 @@
+[user]
+	name = DartPower Team
+	email = dpt@example.com
+[init]
+	defaultBranch = main

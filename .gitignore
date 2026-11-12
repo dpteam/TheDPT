@@ -1,0 +1,10 @@
+# ничего из dpt/ не игнорируем — там самое ценное
+node_modules/
+.tmp/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# логи, но не тот единственный лог, который мы положили сами
+*.log
+!dpt/DPT.log

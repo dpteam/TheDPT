@@ -1,0 +1,5 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. DPTCOB.
+       PROCEDURE DIVISION.
+           DISPLAY "DPT".
+           STOP RUN.

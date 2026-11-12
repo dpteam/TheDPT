@@ -1,0 +1,9 @@
+unit DPT;
+
+interface
+
+const DPT_NAME = 'DartPower Team';
+
+implementation
+
+end.

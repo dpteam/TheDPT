@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: TheDPT
+message: "Если вы ссылаетесь на репозиторий с тремя буквами — ссылайтесь правильно."
+type: software
+authors:
+  - name: DartPower Team
+version: 1.0.0
+date-released: 2026-11-12
+license: MIT
+repository-code: https://github.com/DartPower/TheDPT
+keywords:
+  - dpt
+  - dartpower
+  - polyglot
+  - esoteric

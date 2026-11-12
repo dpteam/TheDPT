@@ -1,0 +1,5 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. DPT.
+       PROCEDURE DIVISION.
+           DISPLAY "DPT".
+           STOP RUN.

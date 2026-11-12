@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^dpt$ /DPT [R=301,L]

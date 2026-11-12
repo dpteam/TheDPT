@@ -1,0 +1,2 @@
+PREFIX dpt: <https://dpteam.dev/>
+SELECT ?team WHERE { ?team dpt:name "DPT" }

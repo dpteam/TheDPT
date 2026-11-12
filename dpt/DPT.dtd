@@ -1,0 +1,2 @@
+<!ELEMENT DPT (#PCDATA)>
+<!ATTLIST DPT team CDATA "DartPower Team">

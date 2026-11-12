@@ -1,0 +1,24 @@
+name: Что-то не открывается
+description: Файл битый, кодировка не та, звук не играет
+title: "bug: "
+labels: [bug]
+body:
+  - type: input
+    id: file
+    attributes:
+      label: Файл
+      placeholder: dpt/DPT.ttf
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Что не так
+      placeholder: fc-scan говорит, что таблица head битая
+    validations:
+      required: true
+  - type: input
+    id: how
+    attributes:
+      label: Чем проверяли
+      placeholder: fontTools 4.68 / ffprobe 7.0

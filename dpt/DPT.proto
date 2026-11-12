@@ -1,0 +1,7 @@
+syntax = "proto3";
+package dpt;
+
+message Team {
+  string name = 1;
+  string shout = 2;
+}
