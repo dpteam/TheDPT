@@ -10,6 +10,7 @@ import {
   add,
   png,
   ico,
+  cur,
   bmp,
   tga,
   ppm,
@@ -55,7 +56,7 @@ export function media(root) {
   add('dpt/DPT.bmp', bmp(512, 512, icon));
   add('dpt/DPT.tga', tga(512, 512, icon));
   add('dpt/DPT.ico', ico([16, 32, 48, 64, 128, 256]));
-  add('dpt/DPT.cur', ico([32])); // курсор — тот же контейнер
+  add('dpt/DPT.cur', cur(32, [8, 8])); // курсор: хотспот в левом верхнем углу
   add('dpt/DPT.ppm', ppm(256, 256, render(256)));
   add('dpt/DPT.pgm', pgm(256, 256, render(256)));
   add('dpt/DPT.pbm', pbm(256, 256, render(256)));

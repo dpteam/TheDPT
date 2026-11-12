@@ -62,13 +62,15 @@ export function encodePNG(width, height, rgba) {
 }
 
 /**
- * ICO-контейнер с PNG-полезной нагрузкой (поддерживается Windows Vista+).
+ * ICO/CUR-контейнер с PNG-полезной нагрузкой (поддерживается Windows Vista+).
+ * У курсора (type 2) вместо planes/bitcount в каталоге лежат координаты хотспота.
  * @param {{size:number, png:Buffer}[]} entries
+ * @param {{cursor?: boolean, hotspot?: [number, number]}} options
  */
-export function encodeICO(entries) {
+export function encodeICO(entries, { cursor = false, hotspot = [0, 0] } = {}) {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0);
-  header.writeUInt16LE(1, 2); // 1 = icon
+  header.writeUInt16LE(cursor ? 2 : 1, 2); // 1 = icon, 2 = cursor
   header.writeUInt16LE(entries.length, 4);
 
   const dir = Buffer.alloc(16 * entries.length);
@@ -79,8 +81,8 @@ export function encodeICO(entries) {
     dir[at + 1] = entry.size >= 256 ? 0 : entry.size;
     dir[at + 2] = 0; // палитра
     dir[at + 3] = 0;
-    dir.writeUInt16LE(1, at + 4); // planes
-    dir.writeUInt16LE(32, at + 6); // bpp
+    dir.writeUInt16LE(cursor ? hotspot[0] : 1, at + 4);
+    dir.writeUInt16LE(cursor ? hotspot[1] : 32, at + 6);
     dir.writeUInt32LE(entry.png.length, at + 8);
     dir.writeUInt32LE(offset, at + 12);
     offset += entry.png.length;

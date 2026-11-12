@@ -100,7 +100,10 @@ check('Картинки', 'ICO / CUR', () => {
     const offset = b.readUInt32LE(at + 12);
     assert(offset + size <= b.length, `иконка ${i} вылезает за файл`);
   }
-  return `${count} размеров`;
+  const cursor = read('DPT.cur');
+  assert(cursor.readUInt16LE(2) === 2, 'CUR должен иметь тип 2');
+  const hotspot = [cursor.readUInt16LE(10), cursor.readUInt16LE(12)];
+  return `${count} размеров, хотспот курсора ${hotspot[0]}:${hotspot[1]}`;
 });
 
 check('Картинки', 'Netpbm', () => {

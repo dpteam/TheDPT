@@ -8,7 +8,7 @@ export const BINARY_META = {
   'dpt/DPT.bmp': { cat: 'media', name: 'BMP', note: '24 бита, строки снизу вверх, без сжатия' },
   'dpt/DPT.tga': { cat: 'media', name: 'TGA', note: '32 бита, начало координат слева сверху' },
   'dpt/DPT.ico': { cat: 'media', name: 'ICO', note: 'шесть размеров от 16 до 256 в одном контейнере' },
-  'dpt/DPT.cur': { cat: 'media', name: 'CUR', note: 'курсор — тот же ICO-контейнер' },
+  'dpt/DPT.cur': { cat: 'media', name: 'CUR', note: 'курсор 32×32, тип 2 и хотспот 8:8' },
   'dpt/DPT.ppm': { cat: 'media', name: 'PPM', note: 'P6, цветной Netpbm' },
   'dpt/DPT.pgm': { cat: 'media', name: 'PGM', note: 'P5, градации серого' },
   'dpt/DPT.pbm': { cat: 'media', name: 'PBM', note: 'P4, один бит на пиксель' },

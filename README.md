@@ -384,7 +384,7 @@ ffplay -autoexit dpt/DPT.wav   # -.. .--. -   (морзянка)
 | [`DPT.bmp`](dpt/DPT.bmp) | BMP | 24 бита, строки снизу вверх, без сжатия |
 | [`DPT.tga`](dpt/DPT.tga) | TGA | 32 бита, начало координат слева сверху |
 | [`DPT.ico`](dpt/DPT.ico) | ICO | шесть размеров от 16 до 256 в одном контейнере |
-| [`DPT.cur`](dpt/DPT.cur) | CUR | курсор — тот же ICO-контейнер |
+| [`DPT.cur`](dpt/DPT.cur) | CUR | курсор 32×32, тип 2 и хотспот 8:8 |
 | [`DPT.ppm`](dpt/DPT.ppm) | PPM | P6, цветной Netpbm |
 | [`DPT.pgm`](dpt/DPT.pgm) | PGM | P5, градации серого |
 | [`DPT.pbm`](dpt/DPT.pbm) | PBM | P4, один бит на пиксель |

@@ -51,6 +51,8 @@ export const morse = (text) => {
 
 export const png = (size) => encodePNG(size, size, render(size));
 export const ico = (sizes) => encodeICO(sizes.map((s) => ({ size: s, png: png(s) })));
+export const cur = (size, hotspot) =>
+  encodeICO([{ size, png: png(size) }], { cursor: true, hotspot });
 
 /** BMP 24-bit, bottom-up, без сжатия. */
 export function bmp(width, height, rgba) {
