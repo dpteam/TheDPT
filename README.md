@@ -493,7 +493,8 @@ ffplay -autoexit dpt/DPT.wav   # -.. .--. -   (морзянка)
 
 Всё, что можно было сгенерировать кодом — сгенерировано кодом, без единой зависимости:
 
-- **картинки** — свой PNG-энкодер (CRC32, zlib, IHDR/IDAT/IEND), свой GIF с LZW, BMP, TGA, ICO, XBM, XPM;
+- **сжатие** — свой deflate (фиксированные коды Хаффмана + LZ77), свои обёртки zlib и gzip: иначе байты зависели бы от версии системного zlib;
+- **картинки** — свой PNG-энкодер (CRC32, адаптивные фильтры строк, IHDR/IDAT/IEND), свой GIF с LZW, BMP, TGA, ICO, XBM, XPM;
 - **звук** — морзянка считается синусом, WAV/AIFF/AU/MIDI собираются побайтово;
 - **архивы и документы** — ZIP с local/central заголовками, TAR USTAR, PDF с ручным xref, DOCX/XLSX/ODT/EPUB как OOXML/ODF-пакеты;
 - **шрифты** — TrueType из десяти таблиц, WOFF через zlib, BDF и PSF текстом и байтами;
@@ -508,6 +509,7 @@ ffplay -autoexit dpt/DPT.wav   # -.. .--. -   (морзянка)
 node tools/icon.mjs        # иконки и баннер в assets/
 node tools/gen/index.mjs   # вся папка dpt/ и документация
 node tools/verify.mjs      # прогон проверок и отчёт
+node tools/check-repro.mjs # пересборка даёт те же байты
 ```
 
 ## Структура
