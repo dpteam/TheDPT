@@ -336,6 +336,30 @@ check('Прочее', 'все файлы названы DPT', () => {
   return 'правило соблюдено';
 });
 
+check('Прочее', 'нет битых ссылок в документации', () => {
+  const docs = [
+    'README.md',
+    ...fs.readdirSync(path.join(root, 'docs')).map((f) => `docs/${f}`),
+    'CONTRIBUTING.md',
+  ];
+  const broken = [];
+  let checked = 0;
+  for (const doc of docs) {
+    const text = fs.readFileSync(path.join(root, doc), 'utf8');
+    const base = path.dirname(path.join(root, doc));
+    for (const match of text.matchAll(/\]\(([^)\s]+)\)/g)) {
+      const target = match[1];
+      if (/^(https?:|mailto:|#)/.test(target)) continue;
+      const clean = target.split('#')[0];
+      if (!clean) continue;
+      checked++;
+      if (!fs.existsSync(path.resolve(base, clean))) broken.push(`${doc} -> ${target}`);
+    }
+  }
+  assert(broken.length === 0, broken.slice(0, 5).join('; '));
+  return `${checked} относительных ссылок`;
+});
+
 /* ───────────────────────── запуск ───────────────────────── */
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'dpt-verify-'));

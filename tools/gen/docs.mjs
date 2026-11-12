@@ -16,12 +16,12 @@ const kb = (n) => (n < 1024 ? `${n} Б` : `${(n / 1024).toFixed(1)} КиБ`);
 
 const esc = (s) => s.replace(/\|/g, '\\|');
 
-function table(rows, extra) {
+function table(rows, extra, prefix = '') {
   const head = extra
     ? '| Файл | Формат | Что это | Размер |\n| --- | --- | --- | ---: |'
     : '| Файл | Формат | Что это |\n| --- | --- | --- |';
   const body = rows.map((r) => {
-    const file = `[\`${r.file.replace('dpt/', '')}\`](${r.file})`;
+    const file = `[\`${r.file.replace('dpt/', '')}\`](${prefix}${r.file})`;
     return extra
       ? `| ${file} | ${esc(r.name)} | ${esc(r.note)} | ${kb(OUT.get(r.file)?.length ?? 0)} |`
       : `| ${file} | ${esc(r.name)} | ${esc(r.note)} |`;
@@ -168,7 +168,7 @@ ${total} файлов. Каждый что-то делает со словом \
 ${GROUPS.map(([id, title, lead]) => {
   const rows = byGroup.get(id) ?? [];
   if (!rows.length) return '';
-  return `## ${title} (${rows.length})\n\n${lead}\n\n${table(rows, true)}\n`;
+  return `## ${title} (${rows.length})\n\n${lead}\n\n${table(rows, true, '../')}\n`;
 }).join('\n')}
 `;
 
