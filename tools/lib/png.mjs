@@ -1,23 +1,11 @@
 // Минимальный PNG/ICO-энкодер без зависимостей.
 // Умеет ровно одно: RGBA-растр -> валидный PNG. Нам большего и не надо.
+// Сжатие — свой deflate из `deflate.mjs`, поэтому байты не зависят от версии zlib.
 
-import zlib from 'node:zlib';
+import { crc32 } from './checksum.mjs';
+import { zlibCompress } from './deflate.mjs';
 
-const CRC_TABLE = (() => {
-  const table = new Uint32Array(256);
-  for (let n = 0; n < 256; n++) {
-    let c = n;
-    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-    table[n] = c >>> 0;
-  }
-  return table;
-})();
-
-export function crc32(buf) {
-  let c = 0xffffffff;
-  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
-  return (c ^ 0xffffffff) >>> 0;
-}
+export { crc32 };
 
 function chunk(type, data) {
   const len = Buffer.alloc(4);
@@ -26,6 +14,47 @@ function chunk(type, data) {
   const crc = Buffer.alloc(4);
   crc.writeUInt32BE(crc32(body), 0);
   return Buffer.concat([len, body, crc]);
+}
+
+/** Предсказание Пейта из RFC 2083. */
+function paeth(a, b, c) {
+  const p = a + b - c;
+  const pa = Math.abs(p - a);
+  const pb = Math.abs(p - b);
+  const pc = Math.abs(p - c);
+  if (pa <= pb && pa <= pc) return a;
+  return pb <= pc ? b : c;
+}
+
+/**
+ * Строит отфильтрованную строку. Фильтры нужны не для красоты: на градиентах
+ * соседние пиксели почти одинаковые, и после вычитания предиктора остаются нули,
+ * которые deflate упаковывает почти бесплатно.
+ */
+function filterRow(type, cur, prev, stride, bpp) {
+  const out = Buffer.alloc(stride);
+  for (let i = 0; i < stride; i++) {
+    const a = i >= bpp ? cur[i - bpp] : 0;
+    const b = prev ? prev[i] : 0;
+    const c = prev && i >= bpp ? prev[i - bpp] : 0;
+    let value;
+    switch (type) {
+      case 0: value = cur[i]; break;
+      case 1: value = cur[i] - a; break;
+      case 2: value = cur[i] - b; break;
+      case 3: value = cur[i] - ((a + b) >> 1); break;
+      default: value = cur[i] - paeth(a, b, c); break;
+    }
+    out[i] = value & 0xff;
+  }
+  return out;
+}
+
+/** Эвристика из спецификации: минимальная сумма абсолютных значений байтов. */
+function cost(row) {
+  let sum = 0;
+  for (let i = 0; i < row.length; i++) sum += row[i] < 128 ? row[i] : 256 - row[i];
+  return sum;
 }
 
 /**
@@ -41,18 +70,34 @@ export function encodePNG(width, height, rgba) {
   ihdr[8] = 8; // bit depth
   ihdr[9] = 6; // color type: RGBA
   ihdr[10] = 0; // deflate
-  ihdr[11] = 0; // adaptive filtering
+  ihdr[11] = 0; // фильтры выбираются адаптивно
   ihdr[12] = 0; // no interlace
 
-  // Каждая строка: байт фильтра 0 + пиксели.
+  // Каждая строка: байт номера фильтра + отфильтрованные пиксели.
   const stride = width * 4;
+  const bpp = 4;
   const raw = Buffer.alloc((stride + 1) * height);
+  let prev = null;
   for (let y = 0; y < height; y++) {
-    raw[y * (stride + 1)] = 0;
-    rgba.copy(raw, y * (stride + 1) + 1, y * stride, (y + 1) * stride);
+    const cur = rgba.subarray(y * stride, (y + 1) * stride);
+    let best = null;
+    let bestType = 0;
+    let bestCost = Infinity;
+    for (let type = 0; type < 5; type++) {
+      const row = filterRow(type, cur, prev, stride, bpp);
+      const rowCost = cost(row);
+      if (rowCost < bestCost) {
+        bestCost = rowCost;
+        best = row;
+        bestType = type;
+      }
+    }
+    raw[y * (stride + 1)] = bestType;
+    best.copy(raw, y * (stride + 1) + 1);
+    prev = cur;
   }
 
-  const idat = zlib.deflateSync(raw, { level: 9 });
+  const idat = zlibCompress(raw);
   return Buffer.concat([
     Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
     chunk('IHDR', ihdr),

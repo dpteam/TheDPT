@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { encodePNG, encodeICO, crc32 } from '../lib/png.mjs';
+import { gzipCompress } from '../lib/deflate.mjs';
 import { render } from '../lib/render.mjs';
 
 export const OUT = new Map(); // относительный путь -> Buffer
@@ -587,7 +588,10 @@ export function tar(entries) {
   return Buffer.concat(blocks);
 }
 
-export const gzip = (data) => zlib.gzipSync(Buffer.from(data), { level: 9 });
+// gzip собираем сами: у zlib в заголовке байт ОС зависит от платформы.
+export const gzip = (data) => gzipCompress(Buffer.from(data));
+// Brotli оставляем из node:zlib — свой энкодер ради одной строки писать нерационально.
+// Его выход зависит от версии brotli в Node, поэтому в check-repro он помечен «мягким».
 export const brotli = (data) => zlib.brotliCompressSync(Buffer.from(data));
 
 /* ─────────────────────────── документы ─────────────────────────── */

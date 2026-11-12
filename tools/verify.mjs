@@ -9,6 +9,7 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { crc32 } from './lib/png.mjs';
+import { deflateRaw } from './lib/deflate.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dpt = path.join(root, 'dpt');
@@ -203,11 +204,34 @@ check('Архивы', 'TAR', () => {
 check('Архивы', 'GZIP', () => {
   const b = read('DPT.gz');
   assert(b[0] === 0x1f && b[1] === 0x8b, 'нет gzip-магии');
+  // Заголовок должен быть платформенно-нейтральным, иначе сборка «плывёт».
+  assert(b[3] === 0x00, 'флаг FLG не нулевой');
+  assert(b.readUInt32LE(4) === 0, 'MTIME не обнулён');
+  assert(b[9] === 0xff, `байт ОС должен быть 255, а он ${b[9]}`);
   const text = zlib.gunzipSync(b).toString('utf8');
   assert(text.includes('DPT'), 'внутри не DPT');
   const tgz = zlib.gunzipSync(read('DPT.tar.gz'));
   assert(tgz.toString('latin1', 257, 262) === 'ustar', 'внутри tgz не tar');
-  return 'gzip и tar.gz распаковываются';
+  return 'gzip и tar.gz распаковываются, заголовок нейтральный';
+});
+
+check('Архивы', 'свой deflate', () => {
+  // Проверяем энкодер на крайних случаях: пусто, один байт, повторы, псевдослучайные данные.
+  const payloads = [
+    Buffer.alloc(0),
+    Buffer.from('D'),
+    Buffer.from('DPT '.repeat(400)),
+    Buffer.from(Array.from({ length: 5000 }, (_, i) => (i * 131 + 17) & 0xff)),
+    Buffer.from(Array.from({ length: 40000 }, (_, i) => (i % 251 === 0 ? 7 : 0))),
+  ];
+  for (const payload of payloads) {
+    const back = zlib.inflateRawSync(deflateRaw(payload));
+    assert(back.equals(payload), `roundtrip на ${payload.length} байт не сошёлся`);
+  }
+  const big = Buffer.from('DPT\n'.repeat(20000));
+  const ours = deflateRaw(big);
+  assert(zlib.inflateRawSync(ours).equals(big), 'большой буфер не разжался');
+  return `${payloads.length} крайних случаев, ${big.length} → ${ours.length} байт`;
 });
 
 check('Архивы', 'Brotli', () => {
