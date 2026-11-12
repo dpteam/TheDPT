@@ -440,9 +440,4 @@ body:
 
   add('.github/FUNDING.yml', `custom: ["https://dpteam.example/donate"]
 `);
-
-  add('docs/VERIFY.md', `# Отчёт проверок
-
-Запустите \`node tools/verify.mjs\` — файл перезапишется настоящими результатами.
-`);
 }
