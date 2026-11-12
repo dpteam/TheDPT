@@ -360,9 +360,7 @@ jobs:
         run: node tools/verify.mjs --no-report
 
       - name: репозиторий воспроизводим
-        run: |
-          git diff --exit-code
-          test -z "$(git status --porcelain)"
+        run: node tools/check-repro.mjs
 `);
 
   add('.github/PULL_REQUEST_TEMPLATE.md', `## Что добавлено
