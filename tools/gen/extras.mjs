@@ -2,6 +2,7 @@
 
 import crypto from 'node:crypto';
 import { add, morse } from './util.mjs';
+import { PRIVATE_PEM, PUBLIC_PEM } from './key.mjs';
 
 const DNA = { 0: 'A', 1: 'C', 2: 'G', 3: 'T' };
 
@@ -88,15 +89,10 @@ END:VCALENDAR
     },
   }));
 
-  /* настоящая RSA-пара, чтобы было чем подписать DPT */
-  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: { type: 'spki', format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-  });
-  add('dpt/DPT.pem', privateKey);
-  add('dpt/DPT.pub', publicKey);
-  add('dpt/DPT.sig', crypto.sign('sha256', Buffer.from(text), privateKey));
+  /* учебная RSA-пара, зафиксирована в key.mjs, чтобы сборка была воспроизводимой */
+  add('dpt/DPT.pem', PRIVATE_PEM);
+  add('dpt/DPT.pub', PUBLIC_PEM);
+  add('dpt/DPT.sig', crypto.sign('sha256', Buffer.from(text), PRIVATE_PEM));
 }
 
 function base32(buf) {

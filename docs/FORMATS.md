@@ -339,7 +339,7 @@
 | [`DPT.abc`](dpt/DPT.abc) | ABC | нотация: `D2 P2 T2` | 50 Б |
 | [`DPT.ly`](dpt/DPT.ly) | LilyPond | партитура на четыре такта | 110 Б |
 | [`DPT.musicxml`](dpt/DPT.musicxml) | MusicXML | одна нота D первой октавы | 494 Б |
-| [`DPT.mus`](dpt/DPT.mus) | MUS | заготовка для Doom | 27 Б |
+| [`DPT.mus`](dpt/DPT.mus) | MUS | заготовка для Doom | 23 Б |
 | [`DPT.mp3`](dpt/DPT.mp3) | MP3 | морзянка в 128 кбит/с | 39.2 КиБ |
 | [`DPT.ogg`](dpt/DPT.ogg) | Ogg Vorbis | то же, свободный кодек | 8.3 КиБ |
 | [`DPT.opus`](dpt/DPT.opus) | Opus | 64 кбит/с, для голоса и морзянки | 25.3 КиБ |
@@ -363,8 +363,8 @@
 | --- | --- | --- | ---: |
 | [`DPT.zip`](dpt/DPT.zip) | ZIP | собственный писатель заголовков, без сжатия | 131 Б |
 | [`DPT.tar`](dpt/DPT.tar) | TAR | USTAR, один файл `DPT.txt` | 2.0 КиБ |
-| [`DPT.tar.gz`](dpt/DPT.tar.gz) | TAR.GZ | tar + deflate | 118 Б |
-| [`DPT.tgz`](dpt/DPT.tgz) | TGZ | то же, короткое имя | 118 Б |
+| [`DPT.tar.gz`](dpt/DPT.tar.gz) | TAR.GZ | tar + deflate | 117 Б |
+| [`DPT.tgz`](dpt/DPT.tgz) | TGZ | то же, короткое имя | 117 Б |
 | [`DPT.gz`](dpt/DPT.gz) | GZ | просто текст, сжатый gzip | 39 Б |
 | [`DPT.br`](dpt/DPT.br) | Brotli | brotli-сжатие того же текста | 23 Б |
 | [`DPT.jar`](dpt/DPT.jar) | JAR | ZIP с манифестом и заготовкой класса | 278 Б |

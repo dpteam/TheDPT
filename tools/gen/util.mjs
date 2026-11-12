@@ -555,10 +555,11 @@ export function zip(entries) {
   return Buffer.concat([...locals, centralBuf, end]);
 }
 
-/** USTAR. */
+/** USTAR. mtime фиксирован, чтобы сборка была воспроизводимой. */
 export function tar(entries) {
   const blocks = [];
   const octal = (n, len) => n.toString(8).padStart(len - 1, '0') + '\0';
+  const mtime = 1762948800; // 2026-11-12T12:00:00Z
   for (const entry of entries) {
     const data = Buffer.isBuffer(entry.data) ? entry.data : Buffer.from(entry.data, 'utf8');
     const name = Buffer.from(entry.name, 'utf8');
@@ -568,7 +569,7 @@ export function tar(entries) {
     header.write(octal(0, 8), 108, 'latin1');
     header.write(octal(0, 8), 116, 'latin1');
     header.write(octal(data.length, 12), 124, 'latin1');
-    header.write(octal(Math.floor(Date.now() / 1000), 12), 136, 'latin1');
+    header.write(octal(mtime, 12), 136, 'latin1');
     header.write('        ', 148, 'latin1');
     header.write('0', 156, 'latin1');
     header.write('ustar\0', 257, 'latin1');

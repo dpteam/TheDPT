@@ -1,11 +1,10 @@
-// РњРµРґРёР°: РєР°СЂС‚РёРЅРєРё, Р·РІСѓРє, РІРёРґРµРѕ. Р§С‚Рѕ РјРѕР¶РµРј вЂ” РєРѕРґРёСЂСѓРµРј СЃР°РјРё, С‡С‚Рѕ РЅРµ РјРѕР¶РµРј вЂ” ffmpeg.
+// Медиа: картинки, звук, видео. Что можем — кодируем сами, что не можем — ffmpeg.
 
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { render } from '../lib/render.mjs';
-import { renderSVG } from '../lib/render.mjs';
+import { render, renderSVG } from '../lib/render.mjs';
 import { encodePNG } from '../lib/png.mjs';
 import {
   add,
@@ -27,15 +26,18 @@ import {
   midi,
 } from './util.mjs';
 
+// -bitexact убирает версии кодеков из контейнеров, -map_metadata -1 — теги.
 const ff = (args) => {
   try {
-    execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...args], {
-      stdio: ['ignore', 'ignore', 'pipe'],
-    });
+    execFileSync(
+      'ffmpeg',
+      ['-hide_banner', '-loglevel', 'error', '-y', '-fflags', '+bitexact', '-flags', '+bitexact', ...args],
+      { stdio: ['ignore', 'ignore', 'pipe'] },
+    );
     return true;
   } catch (error) {
     const stderr = error.stderr ? error.stderr.toString().split('\n')[0] : String(error.message);
-    console.warn(`  ffmpeg пропущен: ${args[args.length - 1]} — ${stderr.slice(0, 120)}`);
+    console.warn(`  ffmpeg пропущен: ${path.basename(args[args.length - 1])} — ${stderr.slice(0, 120)}`);
     return false;
   }
 };
@@ -45,14 +47,14 @@ export function media(root) {
   const src = path.join(tmp, 'DPT.png');
   fs.writeFileSync(src, png(512));
 
-  /* в”Ђв”Ђ СЂР°СЃС‚СЂРѕРІС‹Рµ РєР°СЂС‚РёРЅРєРё в”Ђв”Ђ */
+  /* ── растровые картинки ── */
   const icon = render(512);
   add('dpt/DPT.png', png(512));
   add('dpt/DPT.svg', renderSVG(512));
   add('dpt/DPT.bmp', bmp(512, 512, icon));
   add('dpt/DPT.tga', tga(512, 512, icon));
   add('dpt/DPT.ico', ico([16, 32, 48, 64, 128, 256]));
-  add('dpt/DPT.cur', ico([32])); // РєСѓСЂСЃРѕСЂ вЂ” С‚РѕС‚ Р¶Рµ РєРѕРЅС‚РµР№РЅРµСЂ
+  add('dpt/DPT.cur', ico([32])); // курсор — тот же контейнер
   add('dpt/DPT.ppm', ppm(256, 256, render(256)));
   add('dpt/DPT.pgm', pgm(256, 256, render(256)));
   add('dpt/DPT.pbm', pbm(256, 256, render(256)));
@@ -60,7 +62,7 @@ export function media(root) {
   add('dpt/DPT.xbm', xbm('dpt', 256, 256, render(256)));
   add('dpt/DPT.xpm', xpm('dpt', 128, 128, render(128)));
 
-  // РђРЅРёРјРёСЂРѕРІР°РЅРЅС‹Р№ GIF: РёРєРѕРЅРєР° + РёРЅРІРµСЂСЃРёСЏ РїР°Р»РёС‚СЂС‹.
+  // Анимированный GIF: иконка + инверсия палитры.
   const small = render(256, { supersample: 2 });
   add('dpt/DPT.gif', gif(256, 256, [quantize(small, 256, 256), quantize(small, 256, 256, true)], 35));
 
@@ -76,7 +78,7 @@ export function media(root) {
     if (ff(['-i', src, ...extra, out])) add(`dpt/DPT.${ext}`, fs.readFileSync(out));
   }
 
-  /* в”Ђв”Ђ Р·РІСѓРє в”Ђв”Ђ */
+  /* ── звук ── */
   const samples = morseSamples(44100);
   const wavBuf = wav(samples);
   add('dpt/DPT.wav', wavBuf);
@@ -105,7 +107,7 @@ K:C
   </measure></part>
 </score-partwise>
 `);
-  add('dpt/DPT.mus', `# Doom MUS вЂ” DPT
+  add('dpt/DPT.mus', `# Doom MUS — DPT
 DPT
 `);
 
@@ -121,10 +123,12 @@ DPT
     ['wma', ['-c:a', 'wmav2', '-b:a', '96k']],
   ]) {
     const out = path.join(tmp, `out.${ext}`);
-    if (ff(['-i', wavPath, ...args, out])) add(`dpt/DPT.${ext}`, fs.readFileSync(out));
+    if (ff(['-i', wavPath, '-map_metadata', '-1', ...args, out])) {
+      add(`dpt/DPT.${ext}`, fs.readFileSync(out));
+    }
   }
 
-  /* в”Ђв”Ђ РІРёРґРµРѕ: 12 РєР°РґСЂРѕРІ СЃ Р±РµРіСѓС‰РµР№ РїРѕР»РѕСЃРѕР№ в”Ђв”Ђ */
+  /* ── видео: 12 кадров с бегущей полосой ── */
   const framesDir = path.join(tmp, 'frames');
   fs.mkdirSync(framesDir);
   const W = 640;
@@ -143,7 +147,7 @@ DPT
         buf[o + 3] = 255;
       }
     }
-    // РёРєРѕРЅРєР° РїРѕ С†РµРЅС‚СЂСѓ
+    // иконка по центру
     const ox = (W - 256) / 2;
     const oy = (H - 256) / 2;
     for (let y = 0; y < 256; y++) {
@@ -152,10 +156,12 @@ DPT
         const a = iconRgb[s + 3] / 255;
         if (a <= 0) continue;
         const d = ((oy + y) * W + ox + x) * 4;
-        for (let c = 0; c < 3; c++) buf[d + c] = Math.round(buf[d + c] * (1 - a) + iconRgb[s + c] * a);
+        for (let c = 0; c < 3; c++) {
+          buf[d + c] = Math.round(buf[d + c] * (1 - a) + iconRgb[s + c] * a);
+        }
       }
     }
-    // Р±РµРіСѓС‰Р°СЏ РїРѕР»РѕСЃР°
+    // бегущая полоса
     const barX = Math.round(((t * 1.2) % 1) * W);
     for (let y = 0; y < H; y++) {
       for (let x = 0; x < 3; x++) {
@@ -166,10 +172,7 @@ DPT
         buf[o + 2] = 255;
       }
     }
-    fs.writeFileSync(
-      path.join(framesDir, `f${String(f).padStart(3, '0')}.png`),
-      encodePNG(W, H, buf),
-    );
+    fs.writeFileSync(path.join(framesDir, `f${String(f).padStart(3, '0')}.png`), encodePNG(W, H, buf));
   }
 
   const input = path.join(framesDir, 'f%03d.png');
@@ -183,7 +186,9 @@ DPT
     ['ogv', ['-c:v', 'libtheora', '-q:v', '6']],
   ]) {
     const out = path.join(tmp, `out.${ext}`);
-    if (ff(['-framerate', '12', '-i', input, ...args, out])) add(`dpt/DPT.${ext}`, fs.readFileSync(out));
+    if (ff(['-framerate', '12', '-i', input, '-map_metadata', '-1', ...args, out])) {
+      add(`dpt/DPT.${ext}`, fs.readFileSync(out));
+    }
   }
 
   fs.rmSync(tmp, { recursive: true, force: true });
