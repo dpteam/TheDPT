@@ -345,14 +345,35 @@ function run(cmd, args, cwd = root) {
 }
 
 function expectDpt(section, name, cmd, args) {
-  try {
-    const out = run(cmd, args).trim();
-    if (!out.includes('DPT')) throw new Error(`вывод без DPT: ${out.slice(0, 60)}`);
-    ok(section, name, `вывод: ${out.split('\n')[0].slice(0, 40)}`);
-  } catch (error) {
-    if (error.code === 'ENOENT') skip(section, name, `${cmd} не установлен`);
-    else fail(section, name, String(error.message).split('\n')[0].slice(0, 90));
+  const candidates = cmd === 'python' ? ['python', 'python3'] : [cmd];
+  let lastError = null;
+  for (const candidate of candidates) {
+    try {
+      const out = run(candidate, args).trim();
+      if (!out.includes('DPT')) throw new Error(`вывод без DPT: ${out.slice(0, 60)}`);
+      ok(section, name, `вывод: ${out.split('\n')[0].slice(0, 40)}`);
+      return;
+    } catch (error) {
+      lastError = error;
+      if (error.code !== 'ENOENT') break;
+    }
   }
+  if (lastError && lastError.code === 'ENOENT') skip(section, name, `${cmd} не установлен`);
+  else fail(section, name, String(lastError.message).split('\n')[0].slice(0, 90));
+}
+
+// Компиляторы тоже ищем с запасными именами.
+function runFirst(names, args) {
+  let lastError = null;
+  for (const name of names) {
+    try {
+      return run(name, args);
+    } catch (error) {
+      lastError = error;
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+  throw lastError ?? new Error('нет компилятора');
 }
 
 expectDpt('Запуск', 'Python', 'python', ['dpt/DPT.py']);
@@ -363,14 +384,15 @@ expectDpt('Запуск', 'PowerShell', 'powershell', ['-NoProfile', '-Execution
 expectDpt('Запуск', 'Batch', 'cmd', ['/c', path.join('dpt', 'DPT.bat')]);
 
 check('Запуск', 'Shell (bash)', () => {
-  const out = run('bash', ['dpt/DPT.sh']).trim();
+  const shell = fs.existsSync('/bin/bash') ? '/bin/bash' : 'bash';
+  const out = run(shell, ['dpt/DPT.sh']).trim();
   assert(out.includes('DPT'), 'вывод без DPT');
   return 'вывод: DPT';
 });
 
 check('Запуск', 'C', () => {
   const exe = path.join(tmp, 'dpt-c.exe');
-  run('gcc', ['-O2', '-o', exe, 'dpt/DPT.c']);
+  runFirst(['gcc', 'cc', 'clang'], ['-O2', '-o', exe, 'dpt/DPT.c']);
   const out = run(exe, []).trim();
   assert(out === 'DPT', `вывод: ${out}`);
   return 'gcc собрал и запустил';
@@ -378,7 +400,7 @@ check('Запуск', 'C', () => {
 
 check('Запуск', 'C++', () => {
   const exe = path.join(tmp, 'dpt-cpp.exe');
-  run('g++', ['-O2', '-o', exe, 'dpt/DPT.cpp']);
+  runFirst(['g++', 'c++', 'clang++'], ['-O2', '-o', exe, 'dpt/DPT.cpp']);
   const out = run(exe, []).trim();
   assert(out === 'DPT', `вывод: ${out}`);
   return 'g++ собрал и запустил';
@@ -386,7 +408,7 @@ check('Запуск', 'C++', () => {
 
 check('Запуск', 'Rust', () => {
   const exe = path.join(tmp, 'dpt-rs.exe');
-  run('rustc', ['-O', '-o', exe, 'dpt/DPT.rs']);
+  runFirst(['rustc'], ['-O', '-o', exe, 'dpt/DPT.rs']);
   const out = run(exe, []).trim();
   assert(out === 'DPT', `вывод: ${out}`);
   return 'rustc собрал и запустил';
@@ -395,7 +417,7 @@ check('Запуск', 'Rust', () => {
 check('Запуск', 'Java', () => {
   const outDir = path.join(tmp, 'java');
   fs.mkdirSync(outDir, { recursive: true });
-  run('javac', ['-d', outDir, 'dpt/DPT.java']);
+  runFirst(['javac'], ['-d', outDir, 'dpt/DPT.java']);
   const out = run('java', ['-cp', outDir, 'DPT']).trim();
   assert(out === 'DPT', `вывод: ${out}`);
   return 'javac + java';
@@ -530,7 +552,11 @@ VHDL и прочие) помечены в \`docs/FORMATS.md\` как «напи�
 сверялся глазами, а не компилятором — если найдёте ошибку, это хороший issue.
 `;
 
-fs.writeFileSync(path.join(root, 'docs/VERIFY.md'), md);
+// --no-report нужен CI: там другая ОС и другой набор тулчейнов,
+// поэтому отчёт не сравнивается с закоммиченным.
+if (!process.argv.includes('--no-report')) {
+  fs.writeFileSync(path.join(root, 'docs/VERIFY.md'), md);
+}
 fs.rmSync(tmp, { recursive: true, force: true });
 
 console.log(`проверок: ${results.length} → ✅ ${passed} · ❌ ${failed} · ⏭️ ${skipped}`);

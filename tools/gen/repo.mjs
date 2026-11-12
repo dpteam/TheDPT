@@ -357,7 +357,7 @@ jobs:
         run: node tools/gen/index.mjs
 
       - name: проверки
-        run: node tools/verify.mjs
+        run: node tools/verify.mjs --no-report
 
       - name: репозиторий воспроизводим
         run: |
