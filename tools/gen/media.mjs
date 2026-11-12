@@ -26,14 +26,13 @@ import {
   midi,
 } from './util.mjs';
 
-// -bitexact убирает версии кодеков из контейнеров, -map_metadata -1 — теги.
+// -bitexact перед выходом убирает версии кодеков и случайные UID из контейнеров,
+// -map_metadata -1 — теги. Вместе это делает ffmpeg-выходы воспроизводимыми.
 const ff = (args) => {
   try {
-    execFileSync(
-      'ffmpeg',
-      ['-hide_banner', '-loglevel', 'error', '-y', '-fflags', '+bitexact', '-flags', '+bitexact', ...args],
-      { stdio: ['ignore', 'ignore', 'pipe'] },
-    );
+    execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...args], {
+      stdio: ['ignore', 'ignore', 'pipe'],
+    });
     return true;
   } catch (error) {
     const stderr = error.stderr ? error.stderr.toString().split('\n')[0] : String(error.message);
@@ -41,6 +40,8 @@ const ff = (args) => {
     return false;
   }
 };
+
+const BITEXACT = ['-map_metadata', '-1', '-fflags', '+bitexact', '-flags', '+bitexact'];
 
 export function media(root) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'dpt-'));
@@ -123,7 +124,7 @@ DPT
     ['wma', ['-c:a', 'wmav2', '-b:a', '96k']],
   ]) {
     const out = path.join(tmp, `out.${ext}`);
-    if (ff(['-i', wavPath, '-map_metadata', '-1', ...args, out])) {
+    if (ff(['-i', wavPath, ...BITEXACT, ...args, out])) {
       add(`dpt/DPT.${ext}`, fs.readFileSync(out));
     }
   }
@@ -186,7 +187,7 @@ DPT
     ['ogv', ['-c:v', 'libtheora', '-q:v', '6']],
   ]) {
     const out = path.join(tmp, `out.${ext}`);
-    if (ff(['-framerate', '12', '-i', input, '-map_metadata', '-1', ...args, out])) {
+    if (ff(['-framerate', '12', '-i', input, ...BITEXACT, ...args, out])) {
       add(`dpt/DPT.${ext}`, fs.readFileSync(out));
     }
   }

@@ -341,19 +341,19 @@
 | [`DPT.musicxml`](dpt/DPT.musicxml) | MusicXML | одна нота D первой октавы | 494 Б |
 | [`DPT.mus`](dpt/DPT.mus) | MUS | заготовка для Doom | 23 Б |
 | [`DPT.mp3`](dpt/DPT.mp3) | MP3 | морзянка в 128 кбит/с | 39.2 КиБ |
-| [`DPT.ogg`](dpt/DPT.ogg) | Ogg Vorbis | то же, свободный кодек | 8.3 КиБ |
+| [`DPT.ogg`](dpt/DPT.ogg) | Ogg Vorbis | то же, свободный кодек | 8.2 КиБ |
 | [`DPT.opus`](dpt/DPT.opus) | Opus | 64 кбит/с, для голоса и морзянки | 25.3 КиБ |
 | [`DPT.flac`](dpt/DPT.flac) | FLAC | без потерь | 33.9 КиБ |
 | [`DPT.m4a`](dpt/DPT.m4a) | M4A | AAC в контейнере MP4 | 25.3 КиБ |
 | [`DPT.aac`](dpt/DPT.aac) | AAC | голый ADTS-поток | 24.9 КиБ |
-| [`DPT.wma`](dpt/DPT.wma) | WMA | для тех, кто ещё на Windows Media | 34.9 КиБ |
+| [`DPT.wma`](dpt/DPT.wma) | WMA | для тех, кто ещё на Windows Media | 34.8 КиБ |
 | [`DPT.mp4`](dpt/DPT.mp4) | MP4 | 12 кадров, H.264, иконка и бегущая полоса | 6.1 КиБ |
 | [`DPT.webm`](dpt/DPT.webm) | WebM | VP9 | 2.8 КиБ |
-| [`DPT.mkv`](dpt/DPT.mkv) | MKV | Matroska с тем же H.264 | 5.9 КиБ |
-| [`DPT.mov`](dpt/DPT.mov) | MOV | QuickTime | 6.1 КиБ |
-| [`DPT.avi`](dpt/DPT.avi) | AVI | MPEG-4 part 2, как в 2003-м | 33.4 КиБ |
+| [`DPT.mkv`](dpt/DPT.mkv) | MKV | Matroska с тем же H.264 | 5.8 КиБ |
+| [`DPT.mov`](dpt/DPT.mov) | MOV | QuickTime | 6.0 КиБ |
+| [`DPT.avi`](dpt/DPT.avi) | AVI | MPEG-4 part 2, как в 2003-м | 33.3 КиБ |
 | [`DPT.m4v`](dpt/DPT.m4v) | M4V | iTunes-вариант MP4 | 6.1 КиБ |
-| [`DPT.ogv`](dpt/DPT.ogv) | OGV | Theora | 18.0 КиБ |
+| [`DPT.ogv`](dpt/DPT.ogv) | OGV | Theora | 17.9 КиБ |
 
 ## Архивы, документы, шрифты (19)
 
