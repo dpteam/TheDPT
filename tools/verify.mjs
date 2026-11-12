@@ -69,8 +69,12 @@ check('Картинки', 'GIF', () => {
   const b = read('DPT.gif');
   assert(b.toString('latin1', 0, 6) === 'GIF89a', 'нет сигнатуры GIF89a');
   assert(b[b.length - 1] === 0x3b, 'нет трейлера 0x3B');
-  const frames = b.filter((byte, i) => byte === 0x2c && b[i + 9] !== undefined).length;
-  return `${b.readUInt16LE(6)}×${b.readUInt16LE(8)}, кадров ~${frames}`;
+  let frames = 0;
+  for (let i = 0; i + 2 < b.length; i++) {
+    if (b[i] === 0x21 && b[i + 1] === 0xf9 && b[i + 2] === 0x04) frames++;
+  }
+  assert(frames >= 2, `кадров всего ${frames}`);
+  return `${b.readUInt16LE(6)}×${b.readUInt16LE(8)}, кадров ${frames}`;
 });
 
 check('Картинки', 'BMP', () => {

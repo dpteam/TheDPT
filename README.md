@@ -52,6 +52,18 @@ ffplay -autoexit dpt/DPT.wav   # -.. .--. -   (морзянка)
 Посмотреть глазами: [`dpt/DPT.png`](dpt/DPT.png) · [`dpt/DPT.svg`](dpt/DPT.svg) ·
 [`dpt/DPT.gif`](dpt/DPT.gif) · [`dpt/DPT.mp4`](dpt/DPT.mp4)
 
+<table>
+<tr>
+<td align="center"><img src="dpt/DPT.png" width="140" alt="DPT.png"><br><sub>PNG</sub></td>
+<td align="center"><img src="dpt/DPT.gif" width="140" alt="DPT.gif"><br><sub>GIF</sub></td>
+<td align="center"><img src="assets/banner.png" width="300" alt="баннер"><br><sub>баннер</sub></td>
+</tr>
+</table>
+
+Услышать: [`dpt/DPT.wav`](dpt/DPT.wav) — это `-.. .--. -`, то есть D, P, T морзянкой:
+точка 90 мс, тире 270 мс, тон 720 Гц. То же самое лежит в MIDI, AIFF, AU и во всех
+сжатых аудиоформатах.
+
 ## Каталог
 
 Всего **371** файлов. Полная версия с размерами — в [`docs/FORMATS.md`](docs/FORMATS.md).
